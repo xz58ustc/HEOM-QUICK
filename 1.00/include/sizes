@@ -1,0 +1,92 @@
+!!!!!!!!!!!!!!!
+integer, parameter :: maxalf   = 6
+integer, parameter :: maxsgn   = 2
+integer, parameter :: maxmats  = 1200
+integer, parameter :: maxfreq  = 600
+integer, parameter :: maxtier  = 16                    ! maxtier should be larger than max(ntier, ntier_ad)      
+integer, parameter :: maxspin  = 2 
+integer, parameter :: maxorb   = 4
+integer, parameter :: maxcor   = maxorb*maxorb + maxmats + maxfreq
+integer, parameter :: maxprocs = 32
+real*8,  parameter :: version  = 1.00
+!
+integer, parameter :: nlr      = 2                     ! left and right
+integer, parameter :: nnt      = 2                     ! normal and transpose
+integer, parameter :: nfbase   = 1000                  ! base index number for file name during td evolution
+!
+! constants
+! 
+integer, parameter :: ndimbig  = 4096                  ! a z-matrix of dimension (4096x4096) cost 250MB memory
+!
+complex*16, parameter :: cunity = (1.d0, 0.d0), czero = (0.d0, 0.d0), eye = (0.d0, 1.d0)
+!
+!real*8, parameter :: hbar = 0.65822d0                  ! eV * fs
+real*8, parameter :: hbar = 0.658211928d0              ! eV * fs (changed to this value from ver=-0.887) 
+real*8, parameter :: pi = 3.141592653589793238d0
+real*8, parameter :: jconst = 1.602177d5               !    -> nA
+real*8, parameter :: tconst = 1.1603d4                 ! eV -> Kelvin
+real*8, parameter :: dijconst = 38.7405d0              ! unit conversion constant for electronic and heat current
+                                                       ! e-current -> to nA, heat-current -> to pW
+real*8, parameter :: dpico = 1.d-12, dnano = 1.d-9,   &
+                     micron = 1.d-6, dmicro = 1.d-3,  &
+                     dfemto = 1.d-15, datto = 1.d-18
+real*8, parameter :: dsmall = 1.d-32                   ! a tight criterion to judge whether a number is zero 
+real*8, parameter :: dlarge = 1.d20                    ! a large number
+real*8, parameter :: memmax = 2048.d0                  ! shreshold memory for rho (MB), obsolete!? (need to check)
+real*8, parameter :: qe0 = 0.1602177d0
+!
+real*8 :: dsgn(maxsgn)
+data dsgn   / 1.d0, -1.d0 / 
+!
+integer, parameter :: ngl8 = 8                         ! number of Gauss-Legendre quadratures
+real*8 :: dzgl(ngl8), dwgl(ngl8)                       ! abscissas and weights of Gauss-Legendre quad.
+data dzgl   /                &
+             -0.96028986d0,  &
+             -0.79666648d0,  &
+             -0.52553241d0,  &
+             -0.18343464d0,  &
+              0.18343464d0,  &
+              0.52553241d0,  &
+              0.79666648d0,  &
+              0.96028986d0 /
+data dwgl   /                &
+              0.10122854d0,  &
+              0.22238103d0,  &
+              0.31370665d0,  &
+              0.36268378d0,  &
+              0.36268378d0,  &
+              0.31370665d0,  &
+              0.22238103d0,  &
+              0.10122854d0 /
+!
+! itype_fff = 1
+!
+integer, parameter :: nfff1 = 5                        ! number of generalized Fano functions in FFF scheme 1
+real*8,  parameter :: rfff1 = 1.d3                     ! the ratio of reference temperature T0 over real temperature T 
+integer            :: mpfff1(nfff1)                    ! maximal power of monomial in the decomposed C(t) in FFF scheme 1
+real*8             :: afff1(nfff1), bfff1(nfff1)       ! parameters {a} and {b} in FFF scheme 1
+data mpfff1 / 0, 0, 1, 1, 2 /                          ! in ascending order
+data afff1  / 3.2467d2, 6.80936d1, 8.7113d0, 7.84033d-1, 1.96713d0 /               ! mind the order
+data bfff1  / -0.649708d0, -0.521708d0, -0.630721d0, -0.826501d0, -0.813539d0 /    ! mind the order
+!
+! itype_fff = 2
+!
+integer, parameter :: nfff2 = 3                        ! number of generalized Fano functions in FFF scheme 2
+real*8,  parameter :: rfff2 = 1.d2                     ! the ratio of reference temperature T0 over real temperature T
+integer            :: mpfff2(nfff2)                    ! maximal power of monomial in the decomposed C(t) in FFF scheme 2
+real*8             :: afff2(nfff2), bfff2(nfff2)       ! parameters {a} and {b} in FFF scheme 2
+data mpfff2 / 0, 1, 2 /                                ! in ascending order
+data afff2  / 7.75799d0, 2.12761d1, 6.14312d-1 /       ! mind the order
+data bfff2  / -0.773664d0, -0.821955d0, -0.771697d0 /  ! mind the order
+!
+! itype_fff = 3
+!
+integer, parameter :: nfff3 = 5                        ! number of generalized Fano functions in FFF scheme 3
+real*8,  parameter :: rfff3 = 1.d3                     ! the ratio of reference temperature T0 over real temperature T
+integer            :: mpfff3(nfff3)                    ! maximal power of monomial in the decomposed C(t) in FFF scheme 3
+real*8             :: afff3(nfff3), bfff3(nfff3)       ! parameters {a} and {b} in FFF scheme 3
+data mpfff3 / 0, 1, 1, 1, 2 /                          ! in ascending order
+data afff3  /2.69600d2, 2.81436d1, 2.61076d0, 7.54740d-1, 6.37650d0  /               ! mind the order
+data bfff3  /-7.79276d-1, -6.43308d-1, -8.15771d-1, -7.66179d-1, -8.00728d-1  /      ! mind the order
+!
+
